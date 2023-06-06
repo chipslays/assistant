@@ -1,11 +1,10 @@
 {
-    "name": "chipslays/chatbot",
+    "name": "chipslays/assistant",
     "type": "library",
     "keywords": ["chatbot", "assistant"],
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "php-ai/php-ml": "^0.10.0",
         "cijic/phpmorphy": "^0.3.1"
     },
     "require-dev": {
