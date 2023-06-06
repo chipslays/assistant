@@ -23,7 +23,38 @@ $assistant->add(['Какой-то другой вопрос от пользов�
 $answer = $assistant->run('Какой способ связи с вами есть?'); // Наш телефон: 8 800 555-35-35
 ```
 
-## Документация
+## API
+
+### `Assistant(TextProcessorInterface $textProcessor = new SimpleTextProcessor)`
+
+```php
+use Chatbot\Assistant;
+use Chatbot\Processors\TextProcessor;
+
+// по умолчанию Assistant использует SimpleTextProcessor
+// но можно воспользоваться MorphyTextProcessor
+$assistant = new Assistant(new MorphyTextProcessor);
+```
+
+```php
+use Chatbot\Assistant;
+use Chatbot\Processors\TextProcessor;
+
+// процессор MorphyTextProcessor поддерживает другие языки из phpMorphy
+// но SimpleTextProcessor поддерживает все (?) языки, которые попдают под ~[^a-zа-яё0-9]~iu
+$assistant = new Assistant(new MorphyTextProcessor('en'));
+```
+
+```php
+use Chatbot\Assistant;
+use Chatbot\Processors\TextProcessor;
+use cijic\phpMorphy\Morphy;
+
+// или можно передать объект Morphy в MorphyTextProcessor
+$assistant = new Assistant(new MorphyTextProcessor(new Morphy('en')));
+```
+
+### `add(array $questions, mixed $answer): self`
 
 ```php
 $assistant->add([...], 'Ответ в виде строки');
@@ -32,7 +63,11 @@ $answer = $assistant->run('...'); // ответ в виде строки
 ```
 
 ```php
-$assistant->add([...], ['text' => 'Ответ в виде массива', 'buttons' => [...], 'yetAnotherKey' => 'Еще какое-то значение']);
+$assistant->add([...], [
+    'text' => 'Ответ в виде массива',
+    'buttons' => [...],
+    'yetAnotherKey' => 'Еще какое-то значение'
+]);
 
 $answer = $assistant->run('...'); // [array]
 ```
@@ -82,6 +117,8 @@ $answer = $answers[0]['answer'];
 $answer = is_callable($answer) ? call_user_func($answer) : $answer;
 ```
 
+### `setDataset(array $dataset): self`
+
 ```php
 // массовое добавление (под капотом цикл с методом add)
 $dataset = [
@@ -108,6 +145,8 @@ $dataset = [
 $assistant->setDataset($dataset);
 ```
 
+### `setDefaultAnswer(mixed $answer): void`
+
 ```php
 // ответ по умолчанию, если не были найдены ответы
 // поддерживает так же любые типы ответа
@@ -116,29 +155,3 @@ $assistant->setDefaultAnswer([...]);
 $assistant->setDefaultAnswer(fn () => ...);
 ```
 
-```php
-use Chatbot\Assistant;
-use Chatbot\Processors\TextProcessor;
-
-// по умолчанию Assistant использует SimpleTextProcessor
-// но можно воспользоваться MorphyTextProcessor
-$assistant = new Assistant(new MorphyTextProcessor);
-```
-
-```php
-use Chatbot\Assistant;
-use Chatbot\Processors\TextProcessor;
-
-// процессор MorphyTextProcessor поддерживает другие языки из phpMorphy
-// но SimpleTextProcessor поддерживает все (?) языки, которые попдают под ~[^a-zа-яё0-9]~iu
-$assistant = new Assistant(new MorphyTextProcessor('en'));
-```
-
-```php
-use Chatbot\Assistant;
-use Chatbot\Processors\TextProcessor;
-use cijic\phpMorphy\Morphy;
-
-// или можно передать объект Morphy в MorphyTextProcessor
-$assistant = new Assistant(new MorphyTextProcessor(new Morphy('en')));
-```
