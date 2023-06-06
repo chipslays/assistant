@@ -19,9 +19,11 @@ class Assistant
         $this->textProcessor = $textProcessor;
     }
 
-    public function setTextProcessor(TextProcessorInterface $textProcessor)
+    public function setTextProcessor(TextProcessorInterface $textProcessor): self
     {
         $this->textProcessor = $textProcessor;
+
+        return $this;
     }
 
     public function add(array $questions, mixed $answer): self
@@ -39,6 +41,13 @@ class Assistant
         foreach ($dataset as $data) {
             $this->add($data['questions'], $data['answer']);
         }
+
+        return $this;
+    }
+
+    public function setDefaultAnswer(mixed $answer): self
+    {
+        $this->defaultAnswer = $answer;
 
         return $this;
     }
@@ -65,9 +74,9 @@ class Assistant
         return $asArray ? $answers : ($answers ? $this->processAnswer($answers[0]['answer']) : null);
     }
 
-    public function setDefaultAnswer(mixed $answer): void
+    public function processAnswer(mixed $answer): mixed
     {
-        $this->defaultAnswer = $answer;
+        return is_callable($answer) ? call_user_func($answer) : $answer;
     }
 
     protected function getAnswer(string $inputQuestion): ?array
@@ -96,12 +105,7 @@ class Assistant
         return count($answers) > 0 ? $answers : null;
     }
 
-    public function processAnswer(mixed $answer): mixed
-    {
-        return is_callable($answer) ? call_user_func($answer) : $answer;
-    }
-
-    private function cosineSimilarity(array $inputWords, array $questionWords): float
+    protected function cosineSimilarity(array $inputWords, array $questionWords): float
     {
         $dotProduct = 0;
         $inputMagnitude = 0;
