@@ -14,9 +14,9 @@ class Assistant
 
     protected mixed $defaultAnswer = null;
 
-    public function __construct(TextProcessorInterface $textProcessor = null)
+    public function __construct(TextProcessorInterface $textProcessor = new SimpleTextProcessor)
     {
-        $this->textProcessor = $textProcessor ?? new SimpleTextProcessor;
+        $this->textProcessor = $textProcessor;
     }
 
     public function setTextProcessor(TextProcessorInterface $textProcessor)
@@ -24,19 +24,23 @@ class Assistant
         $this->textProcessor = $textProcessor;
     }
 
-    public function add(array $questions, mixed $answer): void
+    public function add(array $questions, mixed $answer): self
     {
         $this->questionsAndAnswers[] = [
             'questions' => $questions,
             'answer' => $answer,
         ];
+
+        return $this;
     }
 
-    public function setDataset(array $dataset): void
+    public function setDataset(array $dataset): self
     {
         foreach ($dataset as $data) {
             $this->add($data['questions'], $data['answer']);
         }
+
+        return $this;
     }
 
     public function run(string $inputQuestion, bool $asArray = false): mixed
