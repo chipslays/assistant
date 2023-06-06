@@ -41,7 +41,7 @@ use Chatbot\Assistant;
 use Chatbot\Processors\TextProcessor;
 
 // процессор MorphyTextProcessor поддерживает другие языки из phpMorphy
-// но SimpleTextProcessor поддерживает все (?) языки, которые попдают под ~[^a-zа-яё0-9]~iu
+// но SimpleTextProcessor поддерживает все (?) языки, которые попадают под ~[^a-zа-яё0-9]~iu
 $assistant = new Assistant(new MorphyTextProcessor('en'));
 ```
 
