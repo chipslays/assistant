@@ -13,6 +13,6 @@ class SimpleTextProcessor implements TextProcessorInterface
 
     protected function tokenize(string $text): array
     {
-        return array_filter(preg_split('/\s+/', preg_replace('~[^a-zа-яё0-9]~iu', ' ', mb_strtolower($text))));
+        return array_filter(preg_split('/\s+/', preg_replace('~[^a-zа-яё0-9]~iu', ' ', str_replace('ё', 'е', mb_strtolower($text)))));
     }
 }
